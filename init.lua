@@ -692,10 +692,10 @@ require('lazy').setup({
 
         clangd = {},
 
-        cmake = {
-          filetypes = { 'cmake', 'CMakeLists.txt' },
-          root_pattern = { 'cmake-build-debug' },
-        },
+        -- cmake = {
+        --   filetypes = { 'cmake', 'CMakeLists.txt' },
+        --   root_pattern = { 'cmake-build-debug' },
+        -- },
 
         gopls = {},
 
