@@ -76,6 +76,9 @@ install node
 install rust
 # TODO npm_install htmx-lsp
 
+# XML
+install libxml2
+
 # Zig
 install zig
 install zls

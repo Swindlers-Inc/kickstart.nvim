@@ -851,6 +851,8 @@ require('lazy').setup({
         c = { 'clang_format' },
         cpp = { 'clang_format' },
         lua = { 'stylua' },
+        -- :%!xmllint --format -
+        -- xml = { 'xmllint --format -' },
         zig = { 'zig fmt' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
