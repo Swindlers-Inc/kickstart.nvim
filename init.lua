@@ -194,6 +194,10 @@ vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' }
 -- Keybinds for generating and inserting UUID at cursor location
 vim.keymap.set('n', '<leader>id', 'a<C-R>=trim(system("uuidgen"))<CR><ESC>', { desc = 'Generate UUID' })
 
+-- Keybinds for formatting xml
+-- :%!xmllint --format -
+vim.keymap.set('n', '<leader>ixf', ':%!xmllint --format -<CR>', { desc = 'Format XML' })
+
 -- Keybinds to make split navigation easier.
 --  Use CTRL+<hjkl> to switch between windows
 --
@@ -851,7 +855,6 @@ require('lazy').setup({
         c = { 'clang_format' },
         cpp = { 'clang_format' },
         lua = { 'stylua' },
-        -- :%!xmllint --format -
         -- xml = { 'xmllint --format -' },
         zig = { 'zig fmt' },
         -- Conform can also run multiple formatters sequentially
