@@ -196,7 +196,7 @@ vim.keymap.set('n', '<leader>id', 'a<C-R>=trim(system("uuidgen"))<CR><ESC>', { d
 
 -- Keybinds for formatting xml
 -- :%!xmllint --format -
-vim.keymap.set('n', '<leader>ixf', ':%!xmllint --format -<CR>', { desc = 'Format XML' })
+vim.keymap.set('n', '<leader>xf', ':%!xmllint --format -<CR>', { desc = 'Format XML' })
 
 -- Keybinds to make split navigation easier.
 --  Use CTRL+<hjkl> to switch between windows
