@@ -98,11 +98,17 @@ vim.g.have_nerd_font = false
 -- NOTE: You can change these options as you wish!
 --  For more options, you can see `:help option-list`
 
+-- Set default shell to ZSH
+vim.o.shell = 'zsh'
+
+-- Filetypes that may not regiser correctly for LSPs
+vim.filetype.add { extension = { templ = 'templ' } }
+
 -- Make line numbers default
 vim.o.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.o.relativenumber = true
+vim.o.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.o.mouse = 'a'
@@ -189,6 +195,13 @@ vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' }
 -- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
 -- vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
 -- vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
+
+-- Keybinds for generating and inserting UUID at cursor location
+vim.keymap.set('n', '<leader>id', 'a<C-R>=trim(system("uuidgen"))<CR><ESC>', { desc = 'Generate UUID' })
+
+-- Keybinds for formatting xml
+-- :%!xmllint --format -
+vim.keymap.set('n', '<leader>xf', ':%!xmllint --format -<CR>', { desc = 'Format XML' })
 
 -- Keybinds to make split navigation easier.
 --  Use CTRL+<hjkl> to switch between windows
@@ -661,6 +674,11 @@ require('lazy').setup({
       --  So, we create new capabilities with blink.cmp, and then broadcast that to the servers.
       local capabilities = require('blink.cmp').get_lsp_capabilities()
 
+      capabilities.textDocument.completion.completionItem.snippetSupport = true
+      require('lspconfig').html.setup {
+        capabilities = capabilities,
+      }
+
       -- Enable the following language servers
       --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
       --
@@ -684,6 +702,77 @@ require('lazy').setup({
         -- ts_ls = {},
         --
 
+        clangd = {},
+
+        -- cmake = {
+        --   filetypes = { 'cmake', 'CMakeLists.txt' },
+        --   root_pattern = { 'cmake-build-debug' },
+        -- },
+
+        gopls = {},
+
+        html = {
+          cmd = { 'vscode-html-language-server', '--stdio' },
+          filetypes = { 'html', 'templ' },
+          init_options = {
+            configurationSection = { 'html', 'css', 'javascript' },
+            embeddedLanguages = {
+              css = true,
+              javascript = true,
+            },
+            provideFormatter = true,
+          },
+        },
+
+        htmx = {
+          cmd = { 'htmx-lsp' },
+          filetypes = {
+            'aspnetcorerazor',
+            'astro',
+            'astro-markdown',
+            'blade',
+            'clojure',
+            'django-html',
+            'htmldjango',
+            'edge',
+            'eelixir',
+            'elixir',
+            'ejs',
+            'erb',
+            'eruby',
+            'gohtml',
+            'gohtmltmpl',
+            'haml',
+            'handlebars',
+            'hbs',
+            'html',
+            'htmlangular',
+            'html-eex',
+            'heex',
+            'jade',
+            'leaf',
+            'liquid',
+            'markdown',
+            'mdx',
+            'mustache',
+            'njk',
+            'nunjucks',
+            'php',
+            'razor',
+            'slim',
+            'twig',
+            'javascript',
+            'javascriptreact',
+            'reason',
+            'rescript',
+            'typescript',
+            'typescriptreact',
+            'vue',
+            'svelte',
+            'templ',
+          },
+        },
+
         lua_ls = {
           -- cmd = { ... },
           -- filetypes = { ... },
@@ -698,6 +787,10 @@ require('lazy').setup({
             },
           },
         },
+
+        templ = {},
+
+        zls = {},
       }
 
       -- Ensure the servers and tools above are installed
@@ -767,7 +860,11 @@ require('lazy').setup({
         end
       end,
       formatters_by_ft = {
+        c = { 'clang_format' },
+        cpp = { 'clang_format' },
         lua = { 'stylua' },
+        -- xml = { 'xmllint --format -' },
+        zig = { 'zig fmt' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
@@ -936,6 +1033,7 @@ require('lazy').setup({
 
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
+      require('mini.pairs').setup()
     end,
   },
   { -- Highlight, edit, and navigate code
@@ -984,7 +1082,7 @@ require('lazy').setup({
   --    This is the easiest way to modularize your config.
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
   --
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
   -- Or use telescope!
