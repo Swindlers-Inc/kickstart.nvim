@@ -106,11 +106,14 @@ do
   -- NOTE: You can change these options as you wish!
   --  For more options, you can see `:help option-list`
 
+  -- Set default shell to ZSH
+  vim.o.shell = 'zsh'
+
   -- Make line numbers default
   vim.o.number = true
   -- You can also add relative line numbers, to help with jumping.
   --  Experiment for yourself to see if you like it!
-  -- vim.o.relativenumber = true
+  vim.o.relativenumber = true
 
   -- Enable mouse mode, can be useful for resizing splits for example!
   vim.o.mouse = 'a'
@@ -218,6 +221,16 @@ do
   -- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
   -- vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
   -- vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
+
+  -- Keybinds for generating and inserting UUID at cursor location
+  vim.keymap.set('n', '<leader>id', 'a<C-R>=trim(system("uuidgen"))<CR><ESC>', { desc = 'Generate UUID' })
+  -- Key binds for Zig development
+  vim.keymap.set('n', '<leader>zbr', ':!zig build run<CR>', { desc = 'zig build run' })
+  vim.keymap.set('n', '<leader>zbt', ':!zig build test --summary all<CR>', { desc = 'zig build test' })
+
+  -- Keybinds for formatting xml
+  -- :%!xmllint --format -
+  vim.keymap.set('n', '<leader>xf', ':%!xmllint --format -<CR>', { desc = 'Format XML' })
 
   -- Keybinds to make split navigation easier.
   --  Use CTRL+<hjkl> to switch between windows
@@ -535,6 +548,7 @@ do
       -- This is where a variable was first declared, or where a function is defined, etc.
       -- To jump back, press <C-t>.
       vim.keymap.set('n', 'grd', builtin.lsp_definitions, { buffer = buf, desc = '[G]oto [D]efinition' })
+      vim.keymap.set('n', 'gd', builtin.lsp_definitions, { buffer = buf, desc = '[G]oto [D]efinition' })
 
       -- Fuzzy find all the symbols in your current document.
       -- Symbols are things like variables, functions, types, etc.
@@ -641,6 +655,7 @@ do
       -- WARN: This is not Goto Definition, this is Goto Declaration.
       --  For example, in C this would take you to the header.
       map('grD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+      map('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
 
       -- The following two autocommands are used to highlight references of the
       -- word under your cursor when your cursor rests there for a little while.
@@ -732,6 +747,14 @@ do
         },
       },
     },
+
+    clangd = {},
+
+    gopls = {},
+
+    rust_analyzer = {},
+
+    zls = {},
   }
 
   vim.pack.add {
@@ -776,8 +799,13 @@ do
     format_on_save = function(bufnr)
       -- You can specify filetypes to autoformat on save here:
       local enabled_filetypes = {
-        -- lua = true,
+        lua = true,
         -- python = true,
+        c = true,
+        cpp = true,
+        go = true,
+        rust = true,
+        zig = true,
       }
       if enabled_filetypes[vim.bo[bufnr].filetype] then
         return { timeout_ms = 500 }
@@ -796,6 +824,11 @@ do
       --
       -- You can use 'stop_after_first' to run the first available formatter from the list
       -- javascript = { "prettierd", "prettier", stop_after_first = true },
+      c = { 'clang-format' },
+      cpp = { 'clang-format' },
+      go = { 'gofmt' },
+      rust = { 'rustfmt' },
+      zig = { 'zig fmt' },
     },
   }
 
@@ -970,7 +1003,7 @@ do
   -- NOTE: You can add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  -- require 'custom.plugins'
+  require 'custom.plugins'
 end
 
 -- The line beneath this is called `modeline`. See `:help modeline`
